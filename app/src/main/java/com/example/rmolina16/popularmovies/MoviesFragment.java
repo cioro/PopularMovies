@@ -2,10 +2,15 @@ package com.example.rmolina16.popularmovies;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,14 +22,42 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-public class MoviesActivity extends AppCompatActivity {
+public class MoviesFragment extends Fragment {
 
+    //TODO think how can the UI look while data is being fetched.
+    private DataAdapter mMovieAdapter = new DataAdapter(new ArrayList<>(Arrays.asList("bla 1", "bla 2", "bla 3", "bla 4", "")));
+
+    public MoviesFragment() {}
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movies);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        View rootView = inflater.inflate(R.layout.movies_fragment,container,false);
+
+        RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.card_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(mMovieAdapter);
+
+        return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        PopularMoviesFetcher moviesFetcher = new PopularMoviesFetcher();
+        moviesFetcher.execute("popular");
     }
 
     public void onClick(View view) {
@@ -128,6 +161,23 @@ public class MoviesActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String[] strings) {
+
+            super.onPostExecute(strings);
+            if (strings != null) {
+                mMovieAdapter.clear();
+                ArrayList<String> movies = new ArrayList<>(Arrays.asList(strings));
+                mMovieAdapter.set(movies);
+                mMovieAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
         }
     }
 }
