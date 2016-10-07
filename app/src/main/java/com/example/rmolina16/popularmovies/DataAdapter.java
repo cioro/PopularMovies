@@ -6,22 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.squareup.picasso.LruCache;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private static final String LOG_TAG = DataAdapter.class.getSimpleName();
-    private ArrayList<AndroidVersion> androidVersions;
+    private ArrayList<Movie> movies;
     private Context context;
 
-    public DataAdapter(Context context,ArrayList<AndroidVersion> android) {
-        this.androidVersions = android;
+    public DataAdapter(Context context,ArrayList<Movie> android) {
+        this.movies = android;
         this.context = context;
     }
 
@@ -34,14 +30,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(DataAdapter.ViewHolder viewHolder, int i) {
 
-        Log.v(LOG_TAG, androidVersions.get(i).getAndroid_image_url());
+        Log.v(LOG_TAG, movies.get(i).getMovie_img_url());
 
-        Glide.with(context).load(androidVersions.get(i).getAndroid_image_url()).error(R.drawable.ic_camera_black_24dp).into(viewHolder.img_android);
+        Glide.with(context).load(movies.get(i).getMovie_img_url()).error(R.drawable.ic_camera_black_24dp).into(viewHolder.img_android);
     }
 
     @Override
     public int getItemCount() {
-        return androidVersions.size();
+        return movies.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

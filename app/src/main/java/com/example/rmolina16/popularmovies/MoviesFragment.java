@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MoviesFragment extends Fragment {
 
@@ -69,19 +67,18 @@ public class MoviesFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(),2);
         recyclerView.setLayoutManager(layoutManager);
 
-        ArrayList<AndroidVersion> androidVersions = prepareData();
-        adapter = new DataAdapter(getContext(),androidVersions);
+        ArrayList<Movie> movies = prepareData();
+        adapter = new DataAdapter(getContext(), movies);
         recyclerView.setAdapter(adapter);
 
     }
 
-    private ArrayList<AndroidVersion> prepareData(){
+    private ArrayList<Movie> prepareData(){
 
-        ArrayList<AndroidVersion> android_version = new ArrayList<>();
+        ArrayList<Movie> android_version = new ArrayList<>();
         for(int i=0;i<android_image_urls.length;i++){
-            AndroidVersion androidVersion = new AndroidVersion();
-            androidVersion.setAndroid_image_url(android_image_urls[i]);
-            android_version.add(androidVersion);
+            Movie movie = new Movie(android_image_urls[i]);
+            android_version.add(movie);
         }
         return android_version;
     }
@@ -196,10 +193,9 @@ public class MoviesFragment extends Fragment {
 
             super.onPostExecute(strings);
             if (strings != null) {
-                ArrayList<AndroidVersion> movies = new ArrayList<>();
+                ArrayList<Movie> movies = new ArrayList<>();
                 for(int i =0; i < strings.length; ++i){
-                    movies.add(i, new AndroidVersion());
-                    movies.get(i).setAndroid_image_url(strings[i]);
+                    movies.add(i, new Movie(strings[i]));
                     Log.v(LOG_TAG,strings[i]);
                 }
                 adapter = new DataAdapter(getContext(),movies);
