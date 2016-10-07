@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,8 +28,7 @@ import java.util.Arrays;
 
 public class MoviesFragment extends Fragment {
 
-    //TODO think how can the UI look while data is being fetched.
-    private DataAdapter mMovieAdapter = new DataAdapter(new ArrayList<>(Arrays.asList("bla 1", "bla 2", "bla 3", "bla 4", "")));
+    private DataAdapter adapter;
 
     public MoviesFragment() {}
 
@@ -37,20 +37,53 @@ public class MoviesFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    private final String android_image_urls[] = {
+            "http://api.learn2crack.com/android/images/donut.png",
+            "http://api.learn2crack.com/android/images/donut.png",
+            "http://api.learn2crack.com/android/images/donut.png",
+            "http://api.learn2crack.com/android/images/donut.png",
+            "http://api.learn2crack.com/android/images/eclair.png",
+            "http://api.learn2crack.com/android/images/froyo.png",
+            "http://api.learn2crack.com/android/images/ginger.png",
+            "http://api.learn2crack.com/android/images/honey.png",
+            "http://api.learn2crack.com/android/images/icecream.png",
+            "http://api.learn2crack.com/android/images/jellybean.png",
+            "http://api.learn2crack.com/android/images/kitkat.png",
+            "http://api.learn2crack.com/android/images/lollipop.png",
+            "http://api.learn2crack.com/android/images/marshmallow.png"
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.movies_fragment,container,false);
+        initViews(rootView);
+        return rootView;
+    }
 
+    private void initViews(View rootView){
         RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.card_recycler_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(),2);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(mMovieAdapter);
 
-        return rootView;
+        ArrayList<AndroidVersion> androidVersions = prepareData();
+        adapter = new DataAdapter(getContext(),androidVersions);
+        recyclerView.setAdapter(adapter);
+
+    }
+
+    private ArrayList<AndroidVersion> prepareData(){
+
+        ArrayList<AndroidVersion> android_version = new ArrayList<>();
+        for(int i=0;i<android_image_urls.length;i++){
+            AndroidVersion androidVersion = new AndroidVersion();
+            androidVersion.setAndroid_image_url(android_image_urls[i]);
+            android_version.add(androidVersion);
+        }
+        return android_version;
     }
 
     @Override
@@ -60,11 +93,6 @@ public class MoviesFragment extends Fragment {
         moviesFetcher.execute("popular");
     }
 
-    public void onClick(View view) {
-        //Make API request!
-        PopularMoviesFetcher popularMoviesFetcher = new PopularMoviesFetcher();
-        popularMoviesFetcher.execute(view.getTag().toString());
-    }
 
     public class PopularMoviesFetcher extends AsyncTask<String, Void, String[]> {
 
@@ -168,10 +196,14 @@ public class MoviesFragment extends Fragment {
 
             super.onPostExecute(strings);
             if (strings != null) {
-                mMovieAdapter.clear();
-                ArrayList<String> movies = new ArrayList<>(Arrays.asList(strings));
-                mMovieAdapter.set(movies);
-                mMovieAdapter.notifyDataSetChanged();
+                ArrayList<AndroidVersion> movies = new ArrayList<>();
+                for(int i =0; i < strings.length; ++i){
+                    movies.add(i, new AndroidVersion());
+                    movies.get(i).setAndroid_image_url(strings[i]);
+                    Log.v(LOG_TAG,strings[i]);
+                }
+                adapter = new DataAdapter(getContext(),movies);
+                adapter.notifyDataSetChanged();
             }
         }
 

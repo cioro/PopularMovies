@@ -17,3 +17,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
+//TODO Modify the data adapter to take in the URL
+//TODO Create a movieData Model class
+//TODO investigate where to best place the loading of my images
+//TODO see if I can cache them.
