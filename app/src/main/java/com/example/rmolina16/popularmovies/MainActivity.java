@@ -2,6 +2,9 @@ package com.example.rmolina16.popularmovies;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -15,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
     }
-
 }
 //TODO Modify the data adapter to take in the URL
 //TODO Create a movieData Model class
