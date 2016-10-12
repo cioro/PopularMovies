@@ -1,8 +1,10 @@
-package com.example.rmolina16.popularmovies;
+package com.example.rmolina16.popularmovies.model;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.rmolina16.popularmovies.BuildConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,9 +26,7 @@ public class MovieListModel implements MovieList {
 
     private List<Observer> movieObservers = new ArrayList<>();
 
-    private List<Movie> movieList = Collections.emptyList();
-    private static String POPULAR = "popular";
-    private static String TOP_RATED = "top_rated";
+    private List<MovieURL> movieURLList = Collections.emptyList();
 
     public static MovieListModel getSingleton() {
         if (singleton == null) {
@@ -37,19 +37,19 @@ public class MovieListModel implements MovieList {
     }
 
     @Override
-    public List<Movie> getDefaultMovies() {
-        if (movieList.isEmpty()) {
+    public List<MovieURL> getDefaultMovies() {
+        if (movieURLList.isEmpty()) {
             MoviePosterAsyncTask fetcher = new MoviePosterAsyncTask();
-            fetcher.execute(POPULAR);
+            fetcher.execute(Type.POPULAR.getLabel());
         }
-        return movieList;
+        return movieURLList;
     }
 
     @Override
-    public List<Movie> getMovies(Type value) {
+    public List<MovieURL> getMovies(Type value) {
         MoviePosterAsyncTask fetcher = new MoviePosterAsyncTask();
         fetcher.execute(value.getLabel());
-        return movieList;
+        return movieURLList;
     }
 
     public enum Type {
@@ -69,14 +69,14 @@ public class MovieListModel implements MovieList {
 
     private void notifyObservers() {
         for (Observer movieObserver : movieObservers) {
-            movieObserver.onUpdatedMovies(movieList);
+            movieObserver.onUpdatedMovies(movieURLList);
         }
     }
 
     @Override
     public void addObserver(Observer observer) {
         movieObservers.add(observer);
-        observer.onUpdatedMovies(movieList);
+        observer.onUpdatedMovies(movieURLList);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class MovieListModel implements MovieList {
 
         private final String LOG_TAG =  MoviePosterAsyncTask.class.getSimpleName();
 
-        private List<Movie> getMovieURL(String moviesJSONStr) throws JSONException {
+        private List<MovieURL> getMovieURL(String moviesJSONStr) throws JSONException {
 
             final String MDB_RESULTS = "results";
             final String MDB_IMAGE_KEY = "poster_path";
@@ -98,11 +98,11 @@ public class MovieListModel implements MovieList {
             JSONObject moviesJSON = new JSONObject(moviesJSONStr);
             JSONArray moviesArray = moviesJSON.getJSONArray(MDB_RESULTS);
 
-            List<Movie> result = new ArrayList<>();
+            List<MovieURL> result = new ArrayList<>();
             for (int i = 0; i < moviesArray.length(); ++i) {
                 JSONObject movie = moviesArray.getJSONObject(i);
                 String movieUrl = IMAGE_BASE_URL + IMAGE_SIZE + movie.getString(MDB_IMAGE_KEY);
-                result.add(new Movie(movieUrl));
+                result.add(new MovieURL(movieUrl));
             }
 
             return result;
@@ -174,7 +174,7 @@ public class MovieListModel implements MovieList {
             }
 
             try {
-                movieList = getMovieURL(movieData);
+                movieURLList = getMovieURL(movieData);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();

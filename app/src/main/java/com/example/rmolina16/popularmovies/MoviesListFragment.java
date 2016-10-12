@@ -12,6 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.rmolina16.popularmovies.model.MovieURL;
+import com.example.rmolina16.popularmovies.model.MovieList;
+import com.example.rmolina16.popularmovies.model.MovieListModel;
+
 import java.util.List;
 
 public class MoviesListFragment extends Fragment {
@@ -85,7 +89,7 @@ public class MoviesListFragment extends Fragment {
     MovieList.Observer mObserver = new MovieList.Observer() {
 
         @Override
-        public void onUpdatedMovies(List<Movie> newMovies) {
+        public void onUpdatedMovies(List<MovieURL> newMovies) {
             adapter.update(newMovies);
         }
     };
