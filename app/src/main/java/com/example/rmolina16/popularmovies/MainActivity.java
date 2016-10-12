@@ -1,25 +1,11 @@
 package com.example.rmolina16.popularmovies;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
+import android.support.v4.app.Fragment;
 
+public class MainActivity extends SingleFragmentActivity {
 
-public class MainActivity extends AppCompatActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.main_activity_container, new MoviesFragment())
-                    .commit();
-        }
+    protected Fragment c​r​e​a​t​e​F​r​a​g​m​e​n​t​() {
+        return new MoviesListFragment();
     }
 }
-//TODO Modify the data adapter to take in the URL
-//TODO Create a movieData Model class
-//TODO investigate where to best place the loading of my images
-//TODO see if I can cache them.
