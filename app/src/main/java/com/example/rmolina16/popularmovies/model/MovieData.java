@@ -1,11 +1,16 @@
 package com.example.rmolina16.popularmovies.model;
 
-public class MovieURL {
+/**
+ * Created by rmolina16 on 10/13/16.
+ */
+
+public class MovieData {
 
     private String movie_img_url;
+
     private int movie_id;
 
-    public MovieURL(int movie_id, String movie_img_url){
+    public MovieData(int movie_id, String movie_img_url){
         this.movie_img_url = movie_img_url;
         this.movie_id = movie_id;
     }

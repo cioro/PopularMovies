@@ -21,7 +21,6 @@ import java.util.List;
 public class MoviesListFragment extends Fragment {
 
     private MovieAdapter adapter;
-    private RecyclerView recyclerView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class MoviesListFragment extends Fragment {
     }
 
     private void initViews(View rootView) {
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.card_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.card_recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);

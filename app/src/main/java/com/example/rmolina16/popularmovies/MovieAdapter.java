@@ -1,7 +1,6 @@
 package com.example.rmolina16.popularmovies;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,7 +40,7 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MovieAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final MovieAdapter.ViewHolder viewHolder, int i) {
 
         Log.v(LOG_TAG, movies.get(i).getMovie_img_url());
 
@@ -52,6 +51,14 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
                 .dontTransform()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(viewHolder.mImageView);
+
+        viewHolder.getmImageView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int movieId = movies.get(viewHolder.getAdapterPosition()).getMovie_id();
+                v.getContext().startActivity(MovieDetailActivity.newIntent(v.getContext(),movieId));
+            }
+        });
     }
 
     @Override
@@ -59,21 +66,16 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
         return movies.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView mImageView;
+
+        public ImageView getmImageView() {
+            return mImageView;
+        }
 
         ViewHolder(View view) {
             super(view);
             mImageView = (ImageView) view.findViewById(R.id.img_android);
-            mImageView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            Snackbar.make(v,"Hello Beautiful",Snackbar.LENGTH_SHORT).show();
-            //notify what?
-            v.getContext().startActivity(MovieDetailActivity.newIntent(v.getContext()));
-            this.getAdapterPosition();
         }
 
     }

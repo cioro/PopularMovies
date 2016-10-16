@@ -6,9 +6,13 @@ import android.support.v4.app.Fragment;
 
 public class MovieDetailActivity extends SingleFragmentActivity {
 
-    public static Intent newIntent(Context context)
+    final public static String MOVIE_ID = "MOVIE_ID";
+
+    public static Intent newIntent(Context context, int movie_id)
     {
-        return new Intent(context, MovieDetailActivity.class);
+        Intent intent = new Intent(context, MovieDetailActivity.class);
+        intent.putExtra(MOVIE_ID, movie_id);
+        return intent;
     }
 
     @Override

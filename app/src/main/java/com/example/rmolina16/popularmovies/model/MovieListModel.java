@@ -88,12 +88,13 @@ public class MovieListModel implements MovieList {
 
         private final String LOG_TAG =  MoviePosterAsyncTask.class.getSimpleName();
 
-        private List<MovieURL> getMovieURL(String moviesJSONStr) throws JSONException {
+        private List<MovieURL> getMovieData(String moviesJSONStr) throws JSONException {
 
             final String MDB_RESULTS = "results";
             final String MDB_IMAGE_KEY = "poster_path";
             final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
             final String IMAGE_SIZE = "w185";
+            final String MBD_MOVIE_ID_KEY = "id";
 
             JSONObject moviesJSON = new JSONObject(moviesJSONStr);
             JSONArray moviesArray = moviesJSON.getJSONArray(MDB_RESULTS);
@@ -102,7 +103,8 @@ public class MovieListModel implements MovieList {
             for (int i = 0; i < moviesArray.length(); ++i) {
                 JSONObject movie = moviesArray.getJSONObject(i);
                 String movieUrl = IMAGE_BASE_URL + IMAGE_SIZE + movie.getString(MDB_IMAGE_KEY);
-                result.add(new MovieURL(movieUrl));
+                int movieId  = movie.getInt(MBD_MOVIE_ID_KEY);
+                result.add(new MovieURL(movieId,movieUrl));
             }
 
             return result;
@@ -125,6 +127,7 @@ public class MovieListModel implements MovieList {
                 final String BASE_URL = "https://api.themoviedb.org/3/movie/";
                 final String API_KEY = "api_key";
                 final String LANGUAGE = "language";
+//                final String PAGE = "page"; specifying the page let's you load the next page of films.
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                         .appendPath(params[0])
@@ -174,7 +177,7 @@ public class MovieListModel implements MovieList {
             }
 
             try {
-                movieURLList = getMovieURL(movieData);
+                movieURLList = getMovieData(movieData);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
