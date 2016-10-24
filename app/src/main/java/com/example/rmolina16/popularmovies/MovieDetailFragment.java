@@ -23,11 +23,6 @@ public class MovieDetailFragment extends Fragment {
         //Load movie object with data.
     }
 
-    // if not got movie data fetch it        (model)
-    // if fetching show loading indicator  (UI)
-    // do the fetch                        (model)
-    // when fetched update some persistent store (in-memory, database) (model)
-    // when fetched update list            (UI)
 
 
     @Override
